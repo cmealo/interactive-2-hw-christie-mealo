@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>D3: SVG bar chart with value labels</title>
+		<script type="text/javascript" src="../d3/d3.v3.js"></script>
+		<style type="text/css">
+		
+		body{
+			background-color: #D6F6F3;
+		}	
+
+		svg{
+			display: block;
+			margin: auto;
+		}
+
+		h1{
+			display: block;
+			margin: 20 auto;
+			text-align: center;
+		}
+
+		</style>
+	</head>
+	<body>
+		<div></div>
+		<h1>Christie's First D3 Bar Chart</h1>
+		<script type="text/javascript">
+
+			//Width and height
+			var w = 1000;
+			var h = 500;
+			var barPadding = 2;
+			
+			var dataset = [ 5, 10, 13, 19, 21, 28, 22, 18, 13, 9,
+							6, 11, 15, 20, 18, 13, 8, 21, 25, 19, 14 ];
+			
+			//Create SVG element
+			var svg = d3.select("div")
+						.append("svg")
+						.attr("width", w)
+						.attr("height", h);
+
+			//bars
+			svg.selectAll("rect")
+			   .data(dataset)
+			   .enter()
+			   .append("rect")
+			   //making width of the bars (rects) all the same dynamically, remember x is an attribute of rect svg
+			   .attr("x", function(d, i) {
+			   		return i * (w / dataset.length);
+			   })
+			   //making height of bars and scaling them up by d * x, h-(d * x) because svg draws from top left not bottom left, remember y is an attribute of rect svg
+			   .attr("y", function(d) {
+			   		return h - (d * 10);
+			   })
+			   //making dynamic evenly spaced bars, seperated by barpadding
+			   .attr("width", w / dataset.length - barPadding)
+			   //returning the heightf of the data (d) and scaling it by x
+			   .attr("height", function(d) {
+			   		return d * 10;
+			   })
+			   //making the colors responsive to the data
+			   .attr("fill", function(d) {
+					return "rgb(" + (d * 15) + ", " + (d * 0) + ", " + (d * 10) + ")";
+			   });
+
+			//labels   
+			svg.selectAll("text")
+			   .data(dataset)
+			   .enter()
+			   .append("text")
+			   .text(function(d) {
+			   		return d;
+			   })
+			   //setting the x coordinate of the label inside of the rect
+			   .attr("x", function(d, i) {
+			   		return i * (w / dataset.length) + 16;
+			   })
+			   //setting the y coordinate of the label inside of the rect
+			   .attr("y", function(d) {
+			   		return h - (d * 10) + 18;
+			   })
+			   .attr("font-family", "sans-serif")
+			   .attr("font-size", "12px")
+			   .attr("fill", "white");
+
+
+			
+		</script>
+	</body>
+</html>

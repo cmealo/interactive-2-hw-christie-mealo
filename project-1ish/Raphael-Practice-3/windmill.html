@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Windmill</title>
+
+<script type="text/javascript" src="js/raphael-min.js"></script>
+
+<style type="text/css">
+
+body {
+	background-color: #F8F7F4;
+}
+
+</style> 
+
+</head>
+  <body>
+  
+
+	<div id="windmillBox"></div>
+	
+
+<!-- js below created by Ready Set Raphael website the rsr variable replaced by windmillBox-->
+
+	<script type="text/javascript">
+
+var windmillBox = Raphael('windmillBox', '800', '600'); 
+
+var base = windmillBox.path("M395.4,218.1c1.6,5.8,80.8,352.9,34.9,352.9s-64.6,0-64.6,0s-22.3,5.7-11.5-80.8 C365.2,403.7,389,194.5,395.4,218.1z"); base.attr({id: 'base',fill: '#2C0E75','stroke-width': '0','stroke-opacity': '1'}).data('id', 'base'); 
+
+var fan1 = windmillBox.path("M345.8,270.2c-18.5,10.8-93.5,38-138.6-21.8c0,0,66.8,20.3,103.7-18.2c34.7-36.1,80-24.6,73.1-2.6 C377,249.7,364.2,259.4,345.8,270.2z"); fan1.attr({id: 'fan1',fill: '#29E1EF','stroke-width': '0','stroke-opacity': '1'}).data('id', 'fan1'); 
+
+var fan2 = windmillBox.path("M447.5,262.4c10.8,18.5,38,93.5-21.8,138.6c0,0,20.3-66.8-18.2-103.7c-36.1-34.7-24.6-80-2.6-73.1 S436.7,243.9,447.5,262.4z"); fan2.attr({id: 'fan2',fill: '#4FE04F','stroke-width': '0','stroke-opacity': '1'}).data('id', 'fan2'); 
+
+var fan3 = windmillBox.path("M441.3,159.9c18.5-10.8,93.5-38,138.6,21.8c0,0-66.8-20.3-103.7,18.2c-34.7,36.1-80,24.6-73.1,2.6 S422.9,170.7,441.3,159.9z"); fan3.attr({id: 'fan3',fill: '#FFE300','stroke-width': '0','stroke-opacity': '1'}).data('id', 'fan3'); 
+
+var fan4 = windmillBox.path("M338.9,167.6c-10.8-18.5-38-93.5,21.8-138.6c0,0-20.3,66.8,18.2,103.7c36.1,34.7,24.6,80,2.6,73.1 C359.5,198.9,349.7,186.1,338.9,167.6z"); fan4.attr({id: 'fan4',fill: '#FF3C15','stroke-width': '0','stroke-opacity': '1'}).data('id', 'fan4'); 
+
+var fanblades = windmillBox.set();
+    fanblades.push(fan1);
+    fanblades.push(fan2);    
+    fanblades.push(fan3);
+    fanblades.push(fan4);
+
+
+var animFan = Raphael.animation({"transform":"r360,396,216"}, 6000, "elastic");
+                fanblades.animate(animFan.repeat(Infinity));
+
+var fadeFan = Raphael.animation({"fill-opacity":"0.5"}, 1000);
+                fan1.animate(fadeFan.delay(100).repeat(Infinity));
+                fan2.animate(fadeFan.delay(250).repeat(Infinity));
+                fan3.animate(fadeFan.delay(450).repeat(Infinity));
+                fan4.animate(fadeFan.delay(550).repeat(Infinity));
+
+/*
+var fadeBase = Raphael.animation({"fill-opacity":"0.8"}, 1000, fadeBase2);
+var fadeBase2 = Raphael.animation({"fill-opacity":"1"}, 2500);
+               base.animate(fadeBase.repeat(Infinity));
+*/
+
+var colorBase = Raphael.animation({"fill":"#000000"}, 2500, colorBase2);
+var colorBase2 = Raphael.animation({"fill":"#2C0E75"}, 1500);
+               base.animate(colorBase.repeat(Infinity));
+
+	</script>
+	
+  </body>
+</html> 

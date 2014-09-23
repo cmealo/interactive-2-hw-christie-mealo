@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Test Page 1</title>
+
+<script type="text/javascript" src="js/raphael-min.js"></script>
+
+<style type="text/css">
+
+body {
+	 background-color:#ffffff;
+} 
+
+
+</style> 
+
+</head>
+  <body>
+  
+	<!-- the html element where to put the paper -->
+	<div id="paper1"></div>
+	
+	<!-- a script that create's a paper and a rectangle -->
+	<script type="text/javascript">
+	var paper = Raphael("paper1", 500,500);
+
+/* create an rectangle called rectangle1 */	
+	var rectangle1 = paper.rect(180,120,150,80).attr({fill: "#00E6B8"});
+	
+
+rectangle1.attr({"fill": "#FF6600", "stroke": "#FF5CD6"});
+
+/* create a text */
+var text1 = paper.text(250,150, "Christie Rules");
+
+/* sets text font family and size */
+text1.attr({"font-family": "sans-serif", "font-size": 28});
+
+/* group both the rectangle and the text in a single Set shape we call button1 */
+var button1 = paper.set(); 
+button1.push(rectangle1); 
+button1.push(text1);
+button1.attr({cursor: "pointer"});
+
+/* add a click handler */
+button1.click(function(evt){
+
+	/* animate the rectangle - in three seconds its fill color and its stroke 
+	 * width will grow "bouncing". */
+	rectangle1.animate({fill:"#6666FF", "stroke-width": 20}, 3000, "ease-in-out");
+	
+	/* also animate the text - syncronized with the rectangle animation the 
+	 * text will grow "bouncing too" */
+	text1.animateWith(rectangle1, null, {"font-size": 78}, 2000, "bounce");
+	
+}); 
+
+	</script>
+
+
+	
+  </body>
+</html> 
