@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>D3 Bar chart with randomized data dynamically adjusting the vertical scale</title>
+		<script type="text/javascript" src="../d3/d3.v3.js"></script>
+		<style type="text/css">
+		body{
+			background-color: #FFFFEB;
+		}	
+
+		svg{
+			display: block;
+			margin: auto;
+		}	
+
+		button{
+			display: block;
+			margin: 30px auto;
+
+		}
+
+		</style>
+	</head>
+	<body>
+	
+		<button>Randomize Data!</button>
+			
+		<script type="text/javascript">
+
+			//Width and height
+			var w = 800;
+			var h = 300;
+			
+			/*
+			var cMin = 0;
+			var cMax = 255;
+			function colorRandom(cMin, cMax) {
+   			return Math.floor(Math.random() * (cMax - cMin + 1)) + cMin;
+   			*/
+			
+			var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
+							11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
+			
+			//setting the x scale as ordinal-- 0 to dataset.length. Normally ordinal scales are nonnumeric but here we are making a numeric ordinal scale because ordinal scales support range banding.
+			var xScale = d3.scale.ordinal() 
+							.domain(d3.range(dataset.length))
+							.rangeRoundBands([0, w], 0.05); 
+							//rangeRoundBands divides the bars evenly based on the width w and then rounds them to the nearest whole pixel; the 0.05 adds 5% padding between bars
+
+			var yScale = d3.scale.linear()
+							.domain([0, d3.max(dataset)])
+							.range([0, h]);
+			
+			//Create SVG element
+			var svg = d3.select("body")
+						.append("svg")
+						.attr("width", w)
+						.attr("height", h);
+
+			//Create bars
+			svg.selectAll("rect")
+			   .data(dataset)
+			   .enter()
+			   .append("rect")
+			   .attr("x", function(d, i) {
+			   		return xScale(i);
+			   })
+			   // remember d is the datum bound to current element, i is the index position of that element
+			   .attr("y", function(d) {
+			   		return h - yScale(d);
+			   })
+			   .attr("width", xScale.rangeBand())
+			   .attr("height", function(d) {
+			   		return yScale(d);
+			   })
+			   .attr("fill", function(d) {
+					return "rgb(0, " + (d * 10) + " , " + (d * 10) + ")";
+			   });
+
+			//Create labels
+			svg.selectAll("text")
+			   .data(dataset)
+			   .enter()
+			   .append("text")
+			   .text(function(d) {
+			   		return d;
+			   })
+			   .attr("text-anchor", "middle")
+			   .attr("x", function(d, i) {
+			   		return xScale(i) + xScale.rangeBand() / 2;
+			   })
+			   .attr("y", function(d) {
+			   		return h - yScale(d) + 14;
+			   })
+			   .attr("font-family", "sans-serif")
+			   .attr("font-size", "11px")
+			   .attr("fill", "white");
+
+
+
+
+			//On click, update with new data			
+			d3.select("button")
+				.on("click", function() {
+
+					//New values for dataset
+					var numValues = dataset.length;						 		//Count original length of dataset
+					var maxValue = 50;											//Highest possible new value
+					dataset = [];  						 				 		//Initialize empty array
+					for (var i = 0; i < numValues; i++) {				 		//Loop numValues times
+						var newNumber = Math.floor(Math.random() * maxValue);	//New random integer (0-50)
+						dataset.push(newNumber);			 			 		//Add new number to array
+					}
+					
+					//Update scale domain
+					//Recalibrate the scale domain, given the new max value in dataset
+					yScale.domain([0, d3.max(dataset)]);
+
+					//Update all rects
+					svg.selectAll("rect")
+					   .data(dataset)
+					   .transition()
+					   .delay(function(d, i) {
+						   return i / dataset.length * 1000;
+					   })
+					   .duration(800)
+					   .attr("y", function(d) {
+					   		return h - yScale(d);
+					   })
+					   .attr("height", function(d) {
+					   		return yScale(d);
+					   })
+					   .attr("fill", function(d) {
+							return "rgb(0, " + (d * 10) + " , " + (d * 10) + ")";
+					   });
+
+					//Update all labels
+					svg.selectAll("text")
+					   .data(dataset)
+					   .transition()
+					   .delay(function(d, i) {
+						   return i / dataset.length * 1000;
+					   })
+					   .duration(800)
+					   .text(function(d) {
+					   		return d;
+					   })
+					   .attr("x", function(d, i) {
+					   		return xScale(i) + xScale.rangeBand() / 2;
+					   })
+					   .attr("y", function(d) {
+					   		return h - yScale(d) + 14;
+					   });
+					   				
+				});
+
+			
+		</script>
+	</body>
+</html>

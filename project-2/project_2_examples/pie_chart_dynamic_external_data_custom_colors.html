@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>D3 Bar chart with randomized data dynamically adjusting the vertical scale</title>
+    
+    <style type="text/css">
+
+body {
+  background-color: #37474f;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: auto;
+  position: relative;
+  width: 960px;
+  color: #ffffff;
+}
+
+text {
+  font: 10px sans-serif;
+}
+
+form {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+  </style>
+
+  </head>
+
+  <body>
+
+<form>
+  <label><input type="radio" name="dataset" value="dolphins" checked> dolphins</label>
+  <label><input type="radio" name="dataset" value="whales"> whales</label>
+</form>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+var width = 960,
+    height = 500,
+    radius = Math.min(width, height) / 2;
+
+var color = d3.scale.ordinal()
+    // .domain(); we don't need an input domain, it is optional in this case (inferred) see below
+    .range(["#b2ebf2", "#26c6da", "#aed581", "#dce775", "#fff59d", "#ffca28", "#ffa000", "#f4511e", "#dd2c00", "#ad1457"]);
+
+//here we create our own ordinal scale of color values; note these are ordinal so the first value in the color range is color(0) the next is color(1), then color(2) etc. Setting the domain on an ordinal scale is optional. If no domain is set, a range must be set explicitly. Then, each unique value that is passed to the scale function will be assigned a new value from the output range; in other words, the domain will be inferred implicitly from usage. https://github.com/mbostock/d3/wiki/Ordinal-Scales
+
+var pie = d3.layout.pie()
+    .value(function(d) { return d.dolphins; })
+    .sort(null);
+
+var arc = d3.svg.arc()
+    .innerRadius(radius - 100)
+    .outerRadius(radius - 20);
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+  .append("g")
+    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+d3.tsv("data_pie_1.tsv", type, function(error, data) {
+  var path = svg.datum(data).selectAll("path")
+      .data(pie)
+    .enter().append("path")
+      .attr("fill", function(d, i) { return color(i); })
+      .attr("d", arc);
+
+  d3.selectAll("input")
+      .on("change", change); 
+
+  var timeout = setTimeout(function() {
+    d3.select("input[value=\"whales\"]").property("checked", true).each(change);
+  }, 2000); //causes the input to switch automatically 2000 msecs after the page loads
+
+
+  function change() {
+    var value = this.value;
+    clearTimeout(timeout);
+    pie.value(function(d) { return d[value]; }); // change the value function. note data has been bound do it is d value not just d
+    path = path.data(pie); // compute the new angles and bind data
+    path.attr("d", arc); // redraw the arcs to new datum
+  }
+});
+
+//Transition between pie charts with same size datasets (columns) use below. For different sized datasets, The easiest way to transition between pie charts with differently-sized datasets (while maintaining object constancy) is to set the missing values to zero... ex d.dolphins = +d.dolphins || 0; remember that || is 'or'.
+
+function type(d) {
+  d.dolphins = +d.dolphins;
+  d.whales = +d.whales;
+  return d;
+}
+
+</script>
+
+</body>
