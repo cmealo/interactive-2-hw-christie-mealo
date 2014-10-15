@@ -1,0 +1,7 @@
+Christie Mealo
+Project 2
+
+
+For Project 2 my main goal was to use D3 to create animated data visualizations and visualizations based on external data files. The first two examples, I was jus learning how to animate the data with tranitions and transition chaining; the data was randomized. The last example-- the pie chart-- utilizes an external tsv (tab seperated value) file to call the data. I also used an ordinal scale to create my own custom color palette for the pie chart, which is not as obvious as one might assume. 
+
+External data files require a server; to make make my example easy to share without setting up an entire web server, I used github gist and bl.ocks by Mike Bostock. 
